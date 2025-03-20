@@ -1,0 +1,163 @@
+// "use client";
+
+// import { Canvas } from "@react-three/fiber";
+// import { Environment, OrbitControls, useGLTF, Stars } from "@react-three/drei";
+// import { Suspense, useRef } from "react";
+// import * as THREE from "three";
+
+// // Load the GLB Model
+// const Model = () => {
+//   const modelRef = useRef<THREE.Group | null>(null);
+//   const { scene } = useGLTF("/t_shirt_body_female_copy.glb"); // Ensure this file exists in /public
+
+//   return <primitive ref={modelRef} object={scene} scale={0.8} />;
+// };
+
+// // Stars Component for Background
+// const StarField = () => {
+//   return (
+//     <Stars
+//       radius={50} // Spread out stars in a large sphere
+//       depth={50} // Adds depth to the starfield
+//       count={1000} // Number of stars
+//       factor={5} // Controls the density
+//       saturation={0} // Make sure they stay white
+//       fade // Enables smooth fading at edges
+//     />
+//   );
+// };
+
+// export default function GLBScene() {
+//   return (
+//     <div className="relative w-full h-screen bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500">
+//       {/* Three.js Canvas */}
+//       <Canvas
+//         camera={{ position: [0, 2, 5], fov: 50 }}
+//         className="absolute inset-0 w-full h-full"
+//       >
+//         <Suspense fallback={null}>
+//           {/* Background Elements */}
+//           <StarField />
+
+//           {/* Model */}
+//           <Model />
+//         </Suspense>
+
+//         {/* Lights */}
+//         <directionalLight position={[5, 5, 5]} intensity={3} castShadow />
+//         <ambientLight intensity={0.5} />
+
+//         {/* Background */}
+//         <Environment preset="night" />
+
+//         {/* Controls */}
+//         <OrbitControls enableZoom enablePan enableRotate autoRotate />
+//       </Canvas>
+//     </div>
+//   );
+// }
+
+"use client";
+
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, useGLTF, Environment, Stars } from "@react-three/drei";
+import { HexColorPicker } from "react-colorful";
+import { useRef, useState } from "react";
+import * as THREE from "three";
+import Link from "next/link";
+
+const Model = ({ color, materialType }: any) => {
+  const modelRef = useRef<THREE.Mesh | null>(null);
+  const { scene } = useGLTF("/t_shirt_body_female_copy.glb");
+
+  scene.traverse((child) => {
+    if (child instanceof THREE.Mesh) {
+      child.material = new THREE.MeshStandardMaterial({ color });
+
+      switch (materialType) {
+        case "Leather":
+          child.material.roughness = 0.3;
+          child.material.metalness = 0.8;
+          break;
+        case "Metallic":
+          child.material.roughness = 0.1;
+          child.material.metalness = 1;
+          break;
+        case "Glowing":
+          child.material.emissive = new THREE.Color(color);
+          child.material.emissiveIntensity = 1;
+          break;
+        default:
+          child.material.roughness = 1;
+          child.material.metalness = 0;
+      }
+    }
+  });
+
+  return <primitive ref={modelRef} object={scene} scale={0.7} />;
+};
+
+const StarField = () => {
+  return (
+    <Stars
+      radius={50} // Spread out stars in a large sphere
+      depth={50} // Adds depth to the starfield
+      count={1000} // Number of stars
+      factor={5} // Controls the density
+      saturation={0} // Make sure they stay white
+      fade // Enables smooth fading at edges
+    />
+  );
+};
+
+export default function MaterialColorPage() {
+  const [color, setColor] = useState("#ffffff");
+  const [materialType, setMaterialType] = useState("Cotton");
+
+  return (
+    <div className="relative w-full h-screen bg-gradient-to-br from-purple-500 via-pink-500 to-yellow-500 flex items-center justify-center">
+      <Canvas
+        camera={{ position: [0, 2, 5], fov: 50 }}
+        className="absolute inset-0 w-full h-full"
+      >
+        <ambientLight intensity={0.8} />
+        <directionalLight position={[5, 5, 5]} intensity={4} castShadow />
+        <Environment preset="night" />
+        <OrbitControls enableZoom enablePan enableRotate autoRotate />
+        <Model color={color} materialType={materialType} />
+
+        <StarField />
+      </Canvas>
+
+      {/* Control Panel */}
+      <div className="absolute top-5 left-5 bg-white/10 p-6 rounded-xl backdrop-blur-lg shadow-lg space-y-4 border border-purple-500">
+        <h2 className="text-xl font-bold text-white">Customize Your T-Shirt</h2>
+
+        {/* Color Picker */}
+        <div>
+          <p className="text-white text-sm">Pick a Color:</p>
+          <HexColorPicker
+            color={color}
+            onChange={setColor}
+            className="w-full h-20 mt-2 rounded-lg shadow-xl"
+          />
+        </div>
+
+        {/* Material Selector */}
+        <div>
+          <p className="text-white text-sm">Material Type:</p>
+          <select
+            className="w-full p-2 mt-2 rounded bg-gray-800 text-white border border-cyan-500 hover:shadow-md transition-all"
+            value={materialType}
+            onChange={(e) => setMaterialType(e.target.value)}
+          >
+            <option value="Cotton">Cotton</option>
+            <option value="Leather">Leather</option>
+            <option value="Metallic">Metallic</option>
+            <option value="Glowing">Glowing</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  );
+}
