@@ -73,6 +73,12 @@ import {
   BookOpen,
   Info,
   Paintbrush,
+  Glasses,
+  Headset,
+  HeadsetIcon,
+  View,
+  Laptop,
+  Bot,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -113,6 +119,16 @@ const Sidebar = () => {
             icon: <BookOpen size={24} />,
             label: "Tutorial",
             href: "http://localhost:5173/",
+          },
+          {
+            icon: <Laptop size={24} />,
+            label: "VR Try On",
+            href: "http://127.0.0.1:7860/",
+          },
+          {
+            icon: <Bot size={24} />,
+            label: "Chatbot",
+            href: "/chatbot",
           },
         ].map((item, index) => (
           <Link key={index} href={item.href} passHref>

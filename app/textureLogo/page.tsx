@@ -335,6 +335,7 @@ import { HexColorPicker } from "react-colorful";
 import { motion } from "framer-motion";
 import { Paintbrush } from "lucide-react";
 import * as THREE from "three";
+import { Text } from "@react-three/drei";
 
 const StarField = () => {
   return (
@@ -358,6 +359,10 @@ const Model = ({
   logoScale,
   fullTextureOffset,
   fullTextureScale,
+  textContent,
+  textColor,
+  textPosition,
+  textScale,
 }: any) => {
   const modelRef = useRef<THREE.Group | null>(null);
   const shirtMeshRef = useRef<THREE.Mesh | null>(null);
@@ -415,6 +420,17 @@ const Model = ({
             map={logoDecal}
           />
         )}
+      {textContent && (
+        <Text
+          position={textPosition}
+          fontSize={textScale}
+          color={textColor}
+          anchorX="center"
+          anchorY="middle"
+        >
+          {textContent}
+        </Text>
+      )}
     </group>
   );
 };
@@ -437,6 +453,13 @@ export default function TextureLogoPage() {
     0, 0,
   ]);
   const [fullTextureScale, setFullTextureScale] = useState<number>(1);
+
+  const [textContent, setTextContent] = useState("");
+  const [textColor, setTextColor] = useState("#000000");
+  const [textPosition, setTextPosition] = useState<[number, number, number]>([
+    0, 0.1, 0.15,
+  ]);
+  const [textScale, setTextScale] = useState<number>(0.1);
 
   const handleImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -463,7 +486,7 @@ export default function TextureLogoPage() {
         <ambientLight intensity={0.8} />
         <directionalLight position={[5, 5, 5]} intensity={4} castShadow />
         <Environment preset="city" />
-        <OrbitControls enableZoom enablePan enableRotate autoRotate />
+        <OrbitControls enableZoom enablePan enableRotate />
 
         <Model
           color={color}
@@ -474,6 +497,10 @@ export default function TextureLogoPage() {
           logoScale={logoScale}
           fullTextureOffset={fullTextureOffset}
           fullTextureScale={fullTextureScale}
+          textContent={textContent}
+          textColor={textColor}
+          textPosition={textPosition}
+          textScale={textScale}
         />
 
         <StarField />
@@ -675,6 +702,61 @@ export default function TextureLogoPage() {
             value={fullTextureScale}
             onChange={(e) => setFullTextureScale(parseFloat(e.target.value))}
             className="w-full h-2 bg-gray-400 rounded-lg cursor-pointer transition-all duration-300 hover:bg-green-500"
+          />
+        </div>
+
+        <div className="absolute top-5 left-5 p-4 bg-white rounded-lg shadow-lg">
+          <input
+            type="text"
+            placeholder="Enter Text"
+            value={textContent}
+            onChange={(e) => setTextContent(e.target.value)}
+            className="p-2 border rounded-md"
+          />
+          <input
+            type="color"
+            value={textColor}
+            onChange={(e) => setTextColor(e.target.value)}
+            className="mt-2 w-full"
+          />
+          <label>Move Text X</label>
+          <input
+            type="range"
+            min="-0.3"
+            max="0.3"
+            step="0.01"
+            value={textPosition[0]}
+            onChange={(e) =>
+              setTextPosition([
+                parseFloat(e.target.value),
+                textPosition[1],
+                textPosition[2],
+              ])
+            }
+          />
+          <label>Move Text Y</label>
+          <input
+            type="range"
+            min="0"
+            max="0.3"
+            step="0.01"
+            value={textPosition[1]}
+            onChange={(e) =>
+              setTextPosition([
+                textPosition[0],
+                parseFloat(e.target.value),
+                textPosition[2],
+              ])
+            }
+          />
+          <label>Scale Text</label>
+          <input
+            type="range"
+            min="0.05"
+            max="0.3"
+            step="0.01"
+            value={textScale}
+            onChange={(e) => setTextScale(parseFloat(e.target.value))}
           />
         </div>
       </div>

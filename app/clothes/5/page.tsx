@@ -142,7 +142,7 @@ export default function TextureLogoPage() {
         <ambientLight intensity={0.8} />
         <directionalLight position={[5, 5, 5]} intensity={4} castShadow />
         <Environment preset="city" />
-        <OrbitControls enableZoom enablePan enableRotate autoRotate />
+        <OrbitControls enableZoom enablePan enableRotate />
 
         <Model
           color={color}
