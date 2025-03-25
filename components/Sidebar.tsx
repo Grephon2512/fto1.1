@@ -79,6 +79,7 @@ import {
   View,
   Laptop,
   Bot,
+  Sparkles,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -118,12 +119,17 @@ const Sidebar = () => {
           {
             icon: <BookOpen size={24} />,
             label: "Tutorial",
-            href: "http://localhost:5173/",
+            href: "/video",
           },
           {
             icon: <Laptop size={24} />,
             label: "VR Try On",
             href: "http://127.0.0.1:7860/",
+          },
+          {
+            icon: <Sparkles size={24} />,
+            label: "AR TryOn",
+            href: "http://127.0.0.1:5000/",
           },
           {
             icon: <Bot size={24} />,

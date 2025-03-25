@@ -24,8 +24,8 @@ export default function Navbar() {
         <div className="hidden md:flex items-center space-x-10">
           <NavLink href="/mainpage">Home</NavLink>
           <NavLink href="/about">About us</NavLink>
-          <NavLink href="/examples">Examples</NavLink>
-          <NavLink href="/pricing">Pricing</NavLink>
+          <NavLink href="/comingSoon">Coming Soon</NavLink>
+          {/* <NavLink href="/pricing">Pricing</NavLink> */}
         </div>
 
         {/* <div className="hidden md:flex items-center space-x-4">
